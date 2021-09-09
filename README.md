@@ -1,7 +1,7 @@
 # Django_ProjectMVISIA
 **Pipeline - Processo Seletivo MVISIA 08/2021**
 
-## Configuração Inicial - Instalação de pacotes
+## Configuração Inicial - Instalação de dependências
 > **Django:** pip install django
 
 > **Django Crispy Forms:** pip install django-crispy-forms 
@@ -17,7 +17,7 @@
 
 ## Executando o Projeto
 
-Dentro da pasta do projeto Django_ProjectMVISIA executar:
+Dentro da pasta do diretório Django_ProjectMVISIA executar:
 
 >  python ./manage.py runserver
 
