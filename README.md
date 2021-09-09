@@ -17,7 +17,7 @@
 
 ## Executando o Projeto
 
-Dentro da pasta do diretório Django_ProjectMVISIA executar:
+Dentro do diretório Django_ProjectMVISIA executar:
 
 >  python ./manage.py runserver
 
