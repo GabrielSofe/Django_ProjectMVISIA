@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <title>Pipeline - Processo Seletivo MVISIA 08/2021</title>
+
+<body>
+  {% load crispy_forms_tags %}
+  <script>
+    function background_subtrack(imgElement, imgURL) {
+      var timestamp = new Date().getTime();
+      var el = document.getElementById("pic");
+      var queryString = "?t=" + timestamp;
+      el.src = "{% url 'bkg_subtract_feed' %}" + queryString;
+    }
+  </script>
+
+  <script>
+    function stream(imgElement, imgURL) {
+      var el = document.getElementById("pic");
+      el.src = "{% url 'video_feed' %}";
+    }
+  </script>
+
+  <script>
+    function get_frame(imgElement, imgURL) {
+      var timestamp = new Date().getTime();
+      var el = document.getElementById("pic");
+      var queryString = "?t=" + timestamp;
+      el.src = "{% url 'frame_feed' %}" + queryString;
+    }
+  </script>
+  <script>
+    function detect_faces(imgElement, imgURL) {
+      var timestamp = new Date().getTime();
+      var el = document.getElementById("pic");
+      var queryString = "?t=" + timestamp;
+      el.src = "{% url 'faces_feed' %}" + queryString;
+    }
+  </script>
+
+  <nav class="navbar navbar-expand navbar-dark bg-dark mb-3">
+    <div class="container">
+      <a class="navbar-brand">Pipeline - Processo Seletivo MVISIA 08/2021</a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link">Gabriel Sousa Ferreira</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">gabriel.sofe@gmail.com</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">(37)988337099</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  </header>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-1"></div>
+      <div class="col-lg-5">
+        <img class="border border-dark rounded" style="width:640px;height:480px;" id="pic"
+          src="{% url 'camera_feed' %}">
+      </div>
+      <div class="col-lg-3 border border-dark rounded">
+        <br>
+        <input class="btn btn-secondary  mb-3 btn-lg btn-block" onclick="stream()" type="button" value="Camera Stream"
+          id="stream"></input>
+        <input class="btn btn-secondary  mb-3 btn-lg btn-block" onclick="get_frame()" type="button"
+          value="Capturar | Resgatar Frame" id="frame"></input>
+        <input class="btn btn-secondary mb-3 btn-lg btn-block" onclick="background_subtrack()" type="button"
+          value="Subtrair Background" id="bkg"></input>
+        <input class="btn btn-secondary  mb-3 btn-lg btn-block" onclick="detect_faces()" type="button"
+          value="Detectar Face e Idade Aparente" id="face"></input>
+
+        <form method="post" id="crop_form">
+          <input class="btn btn-secondary mb-3 btn-lg btn-block" type="submit" id="cform" name="cform"
+            value="Recortar Imagem"></input>
+          {% csrf_token%}
+          <div class="form-row">
+
+            <div class="form-group col-md-3">
+              {{ cform.x|as_crispy_field }}
+            </div>
+
+            <div class="form-group col-md-3">
+              {{ cform.y|as_crispy_field }}
+            </div>
+
+
+            <div class="form-group col-md-3">
+              {{ cform.dx|as_crispy_field }}
+            </div>
+
+
+            <div class="form-group col-md-3">
+              {{ cform.dy|as_crispy_field }}
+            </div>
+          </div>
+
+
+        </form>
+
+        </form>
+        <p class="text-center"><kbd>Clique na imagem para obter as coordenadas</p>
+        <form method="post" id="crop_form">
+          <input class="btn btn-secondary mb-3 btn-lg btn-block" type="submit" id="bform" name="bform"
+            value="Binarizar Imagem"></input>
+          {% csrf_token%}
+          <div class="form-row">
+
+            <div class="form-group col-md-3">
+              {{ bform.r|as_crispy_field }}
+            </div>
+
+            <div class="form-group col-md-3">
+              {{ bform.g|as_crispy_field }}
+            </div>
+
+
+            <div class="form-group col-md-3">
+              {{ bform.b|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3">
+              {{ bform.k|as_crispy_field }}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("img").on("click", function (event) {
+        bounds = this.getBoundingClientRect();
+        var left = bounds.left;
+        var top = bounds.top;
+        var x = event.pageX - left;
+        var y = event.pageY - top;
+        var cw = this.clientWidth
+        var ch = this.clientHeight
+        var iw = this.naturalWidth
+        var ih = this.naturalHeight
+        var px = x / cw * iw
+        var py = y / ch * ih
+        var px = Math.trunc(px);
+        var py = Math.trunc(py);
+        alert("Coordenadas" + " (" + px + "," + py + ") de Píxel da Imagem")
+
+      });
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
